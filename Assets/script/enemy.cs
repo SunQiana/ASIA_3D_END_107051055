@@ -16,12 +16,15 @@ public class enemy : MonoBehaviour
 
     public Transform atkPoint;
     public float atkLenght;
+    public GameObject Bullet;
+    public GameObject Myself;
 
     private Transform player;
     private NavMeshAgent nav;
     private Animator anim;
     private float cdTime;
 
+    //抓數據進來
     private void Awake()
     {
         player = GameObject.Find("Player").transform;
@@ -29,8 +32,8 @@ public class enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         nav.speed = speed;
         nav.stoppingDistance = stopDistance;
-
     }
+
     private void Update()
     {
         cdTime += Time.deltaTime;
@@ -42,10 +45,13 @@ public class enemy : MonoBehaviour
     }
     void Attack()
     {
+        //如果剩餘的距離小於等於設定的暫停距離
         if (nav.remainingDistance <= stopDistance)
         {
+            //改變視線方向
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
 
+            //如果cd冷卻了
             if (cdTime >= attackCD)
             {
                 anim.SetTrigger("attack");
@@ -56,6 +62,7 @@ public class enemy : MonoBehaviour
     }
     void Track()
     {
+        //追蹤
         nav.SetDestination(player.position);
 
         anim.SetBool("walk", nav.remainingDistance > stopDistance);
@@ -63,7 +70,17 @@ public class enemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        //射線還啥的
         Gizmos.color = Color.red;
         Gizmos.DrawRay(atkPoint.position, atkPoint.forward * atkLenght);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Bullet(Clone)")
+        {
+            anim.SetBool("Dead", true);
+            nav.isStopped = (true);
+        }
     }
 }

@@ -19,6 +19,7 @@ public class npctalk : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //如果玩家近來
         if (other.name == "Player")
         {
             dialogUI.SetActive(true);
@@ -30,6 +31,7 @@ public class npctalk : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //如果玩家離開
         if (other.name == "Player")
         {
             dialogUI.SetActive(false);
@@ -38,6 +40,7 @@ public class npctalk : MonoBehaviour
 
     void StopDialoug()
     {
+        //激活對話框
         dialogUI.SetActive(false);
         StopCoroutine(Dialog());
     }
@@ -53,13 +56,7 @@ public class npctalk : MonoBehaviour
             case NPCDialogState.FirstDialog:
                 dialog = NPCDate.dialoug1;
                 break;
-            case NPCDialogState.MissionDialog:
-                dialog = NPCDate.dialoug2;
-                break;
-            case NPCDialogState.FinishDialog:
-                dialog = NPCDate.dialoug3;
-                break;
-        }
+        }  
 
         for (int i = 0; i < NPCDate.dialoug1.Length; i++)
         {
